@@ -1,5 +1,7 @@
 'use strict';
 //selecting the score elements
+const playerEl0 = document.querySelector('.player--0');
+const playerEl1 = document.querySelector('.player--1');
 const scoreElement0 = document.querySelector('#score--0');
 const scoreElement1 = document.getElementById('score--1');
 const diceElement = document.querySelector('.dice');
@@ -19,7 +21,14 @@ scoreElement1.textContent = 0;
 diceElement.classList.add('hidden');
 
 let currentScore = 0;
-
+const swapPlayers = function () {
+  currentScore = 0; //the score becomes 0
+  document.getElementById(`current--${activePlayer}`).textContent =
+    currentScore; //the actual element is reset,starting again from 0
+  activePlayer = activePlayer === 0 ? 1 : 0; // Swapping the players
+  playerEl0.classList.toggle('player--active');
+  playerEl1.classList.toggle('player--active');
+};
 //Random number for the dice
 let diceValue = Math.trunc(Math.random() * 6) + 1;
 
@@ -41,36 +50,18 @@ const btnRollClick = function () {
     //  currentScoreEl0.textContent = currentScore;
     //#2roll again
   } else {
-    currentScore = 0; //the score becomes 0
-    document.getElementById(`current--${activePlayer}`).textContent =
-      currentScore; //the actual element is reset,starting again from 0
-    activePlayer = activePlayer === 0 ? 1 : 0; // Swapping the players
+    swapPlayers();
   }
 };
 
 const holdBtnFunction = function () {
-  switch (activePlayer) {
-    case 0:
-      scores[0] += currentScore;
-      scoreElement0.textContent = scores[0];
-      document.getElementById(`current--${activePlayer}`).textContent = 0; //
-      currentScore = 0;
-      activePlayer = activePlayer === 0 ? 1 : 0;
-      break;
-    case 1:
-      scores[1] += currentScore;
-      scoreElement1.textContent = scores[1];
-      document.getElementById(`current--${activePlayer}`).textContent = 0;
-      currentScore = 0;
-      activePlayer = activePlayer === 0 ? 1 : 0;
-      break;
-  }
+  scores[activePlayer] += currentScore;
+
+  document.getElementById(`score--${activePlayer}`).textContent =
+    scores[activePlayer];
+  swapPlayers();
 };
 
 diceBtnRoll.addEventListener('click', btnRollClick);
 
 diceBtnHold.addEventListener('click', holdBtnFunction);
-
-if (document.getElementById(`current--${activePlayer}`).textContent >= 100) {
-    
-}
